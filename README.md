@@ -7,7 +7,7 @@ It is configured to run both in Docker and Podman, and connect to from VS Code o
 - [Run in Podman](docs/podman.md)
 - Run in Docker (TODO)
 - [Open in VS Code (or Cursor)](docs/vscode.md)
-- Open in IntelliJ (TODO)
+- [Open in IntelliJ IDEA](docs/intellij.md)
 
 # Git Config
 After you setup the container, do not forget to config your user name and email for `git` inside the container:
