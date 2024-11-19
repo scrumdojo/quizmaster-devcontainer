@@ -14,6 +14,7 @@ RUN apt-get install -y tzdata && \
 RUN apt-get install -y \
     sudo \
     git \
+    openssh-server \
     openjdk-21-jdk \
     postgresql
 
@@ -41,6 +42,6 @@ RUN service postgresql start && \
                       psql -c \"ALTER USER dev CREATEROLE;\"" && \
     su - dev -c "psql -d postgres -f /home/dev/quizmaster/backend/create_db.sql"
 
-EXPOSE 5432 8080
+EXPOSE 22 5432 8080
 
-CMD ["/bin/bash", "-c", "service postgresql start && su - dev"]
+CMD ["/bin/bash", "-c", "service ssh start && service postgresql start && su - dev"]
