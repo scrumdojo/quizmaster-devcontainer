@@ -9,6 +9,7 @@ It is configured to run both in Docker and Podman, and connect to from VS Code o
 - Run in Docker (TODO)
 - [Open in VS Code or Cursor](#visual-studio-code-or-cursor)
 - Open in IntelliJ (TODO)
+- [Git Config](#git-config)
 
 # Run in Podman
 - [Prerequisites](#prerequisites)
@@ -113,4 +114,12 @@ To check everything works, open a terminal in VS Code, and run:
 ```
 cd quizmaster/backend
 ./gradlew testE2E
+```
+
+# Git Config
+Do not forget to config your user name and email for git inside the container:
+
+```
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
 ```
