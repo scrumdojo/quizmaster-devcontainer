@@ -29,7 +29,7 @@ USER dev
 WORKDIR /home/dev
 RUN git clone https://github.com/scrumdojo/quizmaster && \
     cd quizmaster/backend && \
-    ./gradlew installFrontend
+    ./gradlew assembleFrontend
 
 # Add pnpm & Node.js to PATH
 RUN echo 'export PATH="$HOME/quizmaster/frontend/node/bin:$PATH"' > ~/.bashrc
