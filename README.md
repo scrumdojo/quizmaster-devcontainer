@@ -16,3 +16,12 @@ After you setup the container, do not forget to config your user name and email 
 git config --global user.name "Your Name"
 git config --global user.email "youremail@yourdomain.com"
 ```
+
+# Login to GitHub
+Create a personal access token in your GitHub profile. Go to Settings > Developer Settings (at the very bottom of the left menu).
+
+Authenticate to GitHub using GitHub CLI (preinstalled in the container) and follow the instructions on the screen.
+
+```
+gh auth login
+```
