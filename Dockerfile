@@ -14,6 +14,7 @@ RUN apt-get install -y tzdata && \
 RUN apt-get install -y \
     sudo \
     git \
+    gh \
     openssh-server \
     openjdk-21-jdk \
     postgresql
