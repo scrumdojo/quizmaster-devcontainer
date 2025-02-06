@@ -12,6 +12,7 @@ RUN apt-get install -y tzdata && \
 
 # Install packages
 RUN apt-get install -y \
+    curl \
     sudo \
     git \
     gh \
@@ -19,29 +20,35 @@ RUN apt-get install -y \
     openjdk-21-jdk \
     postgresql
 
+# Install nvm, Node.js and pnpm
+ENV NVM_VERSION=0.40.1
+ENV NODE_VERSION=22.13.1
+ENV PNPM_VERSION=10.2.0
+ENV NVM_DIR=/usr/local/nvm
+
+RUN mkdir -p $NVM_DIR && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash && \
+    . $NVM_DIR/nvm.sh && \
+    nvm install ${NODE_VERSION} && \
+    npm install -g pnpm@${PNPM_VERSION}
+
 # Create a Linux user 'dev' with password 'dev' able to sudo
 RUN useradd -m -s /bin/bash -G sudo dev && \
     echo "dev:dev" | chpasswd && \
     echo "dev ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Clone the Quizmaster repository
-# Install pnpm, Node.js & Playwright dependencies (browsers)
+# Add node and pnpm to 'dev' user's PATH
 USER dev
-WORKDIR /home/dev
-RUN git clone https://github.com/scrumdojo/quizmaster && \
-    cd quizmaster/backend && \
-    ./gradlew assembleFrontend
+RUN echo "export NVM_DIR=$NVM_DIR" >> /home/dev/.bashrc && \
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> /home/dev/.bashrc && \
+    echo "export PATH=\"\$NVM_DIR/versions/node/v$NODE_VERSION/bin:\$PATH\"" >> /home/dev/.bashrc
 
-# Add pnpm & Node.js to PATH
-RUN echo 'export PATH="$HOME/quizmaster/frontend/node/bin:$PATH"' > ~/.bashrc
-
-# Create a PostgreSQL user 'dev' with password 'dev' & create Quizmaster database
+# Create a PostgreSQL user 'dev' with password 'dev'
 USER root
 RUN service postgresql start && \
     su - postgres -c "psql -c \"CREATE USER dev WITH PASSWORD 'dev';\" && \
                       psql -c \"ALTER USER dev CREATEDB;\" && \
-                      psql -c \"ALTER USER dev CREATEROLE;\"" && \
-    su - dev -c "psql -d postgres -f /home/dev/quizmaster/backend/create_db.sql"
+                      psql -c \"ALTER USER dev CREATEROLE;\""
 
 EXPOSE 22 5173 5432 8080
 
