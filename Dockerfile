@@ -23,6 +23,13 @@ RUN apt-get install -y \
 RUN wget -qO- https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 
+# Create 'quizmaster' PostgreSQL user and 'quizmaster' database
+RUN service postgresql start && \
+    su - postgres -c "psql -c \"CREATE USER quizmaster WITH PASSWORD 'quizmaster';\" && \
+                      psql -c \"CREATE DATABASE quizmaster;\" && \
+                      psql -c \"GRANT ALL PRIVILEGES ON DATABASE quizmaster TO quizmaster;\" && \
+                      psql -d quizmaster -c \"GRANT ALL PRIVILEGES ON SCHEMA public TO quizmaster;\""
+
 # Create a Linux user 'dev' with password 'dev' able to sudo
 RUN useradd -m -s /bin/bash -G sudo dev && \
     echo "dev:dev" | chpasswd && \
@@ -31,13 +38,6 @@ RUN useradd -m -s /bin/bash -G sudo dev && \
 # Install pnpm
 USER dev
 RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash - 
-
-# Create a PostgreSQL user 'dev' with password 'dev'
-USER root
-RUN service postgresql start && \
-    su - postgres -c "psql -c \"CREATE USER dev WITH PASSWORD 'dev';\" && \
-                      psql -c \"ALTER USER dev CREATEDB;\" && \
-                      psql -c \"ALTER USER dev CREATEROLE;\""
 
 EXPOSE 22 5173 5432 8080
 
