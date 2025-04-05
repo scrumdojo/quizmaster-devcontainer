@@ -52,6 +52,6 @@ RUN chmod +x /usr/local/bin/entry.sh
 USER vscode
 RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash - 
 
-EXPOSE 22 5173 5432 8080
+EXPOSE 22 3333 5173 5432 8080
 
 CMD ["/usr/local/bin/entry.sh"]
