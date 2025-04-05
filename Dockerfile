@@ -45,8 +45,11 @@ RUN groupadd vscode && \
     echo "vscode ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Entrypoint script to start SSH and PostgreSQL and interactive shell as 'vscode' user
-COPY entry.sh /usr/local/bin/entry.sh
-RUN chmod +x /usr/local/bin/entry.sh
+COPY sh/interactive.sh /usr/local/bin/interactive.sh
+RUN chmod +x /usr/local/bin/interactive.sh
+
+COPY sh/services.sh /usr/local/bin/services.sh
+RUN chmod +x /usr/local/bin/services.sh
 
 # Install pnpm
 USER vscode
@@ -54,4 +57,4 @@ RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(whic
 
 EXPOSE 22 3333 5173 5432 8080
 
-CMD ["/usr/local/bin/entry.sh"]
+CMD ["/usr/local/bin/interactive.sh"]
