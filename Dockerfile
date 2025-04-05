@@ -31,6 +31,9 @@ RUN apt-get install -y \
 RUN wget -qO- https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # Create 'quizmaster' PostgreSQL user and 'quizmaster' database
 RUN service postgresql start && \
     su - postgres -c "psql -c \"CREATE USER quizmaster WITH PASSWORD 'quizmaster';\" && \
@@ -51,10 +54,7 @@ RUN chmod +x /usr/local/bin/interactive.sh
 COPY sh/services.sh /usr/local/bin/services.sh
 RUN chmod +x /usr/local/bin/services.sh
 
-# Install pnpm
-USER vscode
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash - 
-
 EXPOSE 22 3333 5173 5432 8080
 
+USER vscode
 CMD ["/usr/local/bin/interactive.sh"]
