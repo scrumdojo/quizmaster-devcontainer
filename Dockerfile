@@ -38,15 +38,16 @@ RUN service postgresql start && \
                       psql -c \"GRANT ALL PRIVILEGES ON DATABASE quizmaster TO quizmaster;\" && \
                       psql -d quizmaster -c \"GRANT ALL PRIVILEGES ON SCHEMA public TO quizmaster;\""
 
-# Create a Linux user 'dev' with password 'dev' able to sudo
-RUN useradd -m -s /bin/bash -G sudo dev && \
-    echo "dev:dev" | chpasswd && \
-    echo "dev ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# Create 'vscode' user to match Codespaces conventions
+RUN groupadd vscode && \
+    useradd -m -s /bin/bash -G sudo -g vscode vscode && \
+    echo "vscode:vscode" | chpasswd && \
+    echo "vscode ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install pnpm
-USER dev
+USER vscode
 RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash - 
 
 EXPOSE 22 5173 5432 8080
 
-CMD ["/bin/bash", "-c", "service ssh start && service postgresql start && su - dev"]
+CMD ["/bin/bash", "-c", "service ssh start && service postgresql start && su - vscode"]
