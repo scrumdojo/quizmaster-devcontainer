@@ -19,9 +19,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Build and push
+      - name: Build and push Java Dev Environment
         uses: docker/build-push-action@v4
         with:
           context: ./java
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/quizmaster-java-devenv:v1
+
+      - name: Build and push PHP Dev Environment
+        uses: docker/build-push-action@v4
+        with:
+          context: ./php
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/quizmaster-php-devenv:v1
