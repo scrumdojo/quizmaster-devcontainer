@@ -43,6 +43,6 @@ RUN service postgresql start && \
                       psql -c \"ALTER USER dev CREATEROLE;\"" && \
     su - dev -c "psql -d postgres -f /home/dev/quizmaster/backend/create_db.sql"
 
-EXPOSE 22 5173 5432 8080
+EXPOSE 22 3333 5173 5432 8080
 
 CMD ["/bin/bash", "-c", "service ssh start && service postgresql start && su - dev"]
