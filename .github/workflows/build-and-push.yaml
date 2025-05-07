@@ -1,0 +1,34 @@
+name: Publish Container
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and push Java Dev Environment
+        uses: docker/build-push-action@v4
+        with:
+          context: ./java
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/quizmaster-java-devenv:v1
+
+      - name: Build and push PHP Dev Environment
+        uses: docker/build-push-action@v4
+        with:
+          context: ./php
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/quizmaster-php-devenv:v1
