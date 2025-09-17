@@ -18,7 +18,7 @@ git config --global user.email "youremail@yourdomain.com"
 ```
 
 # Login to GitHub
-Create a personal access token in your GitHub profile. Go to Settings > Developer Settings (at the very bottom of the left menu).
+Create a personal access token in your GitHub profile. Go to Settings > Developer Settings (at the very bottom of the left menu). The minimum required scopes are 'repo', 'read:org', 'admin:public_key'.
 
 Authenticate to GitHub using GitHub CLI (preinstalled in the container) and follow the instructions on the screen.
 
